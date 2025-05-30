@@ -1,0 +1,10 @@
+push test!
+:wq
+ZZ
+
+vim
+:w
+:wq
+vvv
+
+

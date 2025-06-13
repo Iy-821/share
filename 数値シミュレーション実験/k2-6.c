@@ -3,7 +3,7 @@
 
 double f(double s){
     double km=0.75;
-    double vmax=0.02*60;    //単位がsecでminで計算したいので60倍
+    double vmax=0.02;    //単位がsecでminで計算したいので60倍
     return (vmax*s/(km+s));
 }
 

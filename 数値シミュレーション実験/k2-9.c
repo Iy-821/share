@@ -3,7 +3,7 @@
 
 double f(double s){
     double km=0.75;
-    double vmax=0.02*60;
+    double vmax=0.02;
     double sn;
     double kmn=km*km*km;
     sn=s*s*s;

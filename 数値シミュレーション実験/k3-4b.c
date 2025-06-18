@@ -1,5 +1,5 @@
 #include <stdio.h>
-#define N 36000 //36000回実行
+#define N 36000 //[s]
 
 double glu[N+1];
 double g6p[N+1];
@@ -10,7 +10,7 @@ double dglu[N+1];
 double dgluhk[N+1];
 double dg6p[N+1];
 
-double dt=600.0/N;   //1回1sで36000回で600分
+double dt=600.0/N;   //[min]
 
 double fglu(double k1,double glu,double hkfree,double gluhk,double k2){
     double q1=k1*glu*hkfree;
@@ -21,14 +21,14 @@ double fglu(double k1,double glu,double hkfree,double gluhk,double k2){
 double fgluhk(double k1,double glu,double hkfree,double gluhk,double k2,double k3){
     double q1=k1*glu*hkfree;
     double q2=k2*gluhk;
-    double q3=c
-    return (q1-q2-q3);
+    return (q1-q2);
 }
 
-double fg6p(double k3,double gluhk){
-    double q3=k3*gluhk;
-    return q3;
-
+double fg6p(double s,double k1,double k2,double k3){
+    double etot=0.1;
+    double km=(k2+k3)/k1;
+    double vmax=k3*etot;
+    return ((vmax*s)/km+s);
 }
 
 int main(void){
@@ -46,9 +46,9 @@ int main(void){
         hkfree[i]=hktotal-gluhk[i]; //hkfreeの濃度計算
         dglu[i]=fglu(k1,glu[i],hkfree[i],gluhk[i],k2);
         dgluhk[i]=fgluhk(k1,glu[i],hkfree[i],gluhk[i],k2,k3);
-        dg6p[i]=fg6p(k3,gluhk[i]);
+        dg6p[i]=fg6p(glu[i],k1,k2,k3);
 
-        glu[i+1]=glu[i]+dglu[i]*dt;
+        glu[i+1]=glu[i]+dglu[i]*dt-dg6p[i]*dt;
         gluhk[i+1]=gluhk[i]+dgluhk[i]*dt;
         g6p[i+1]=g6p[i]+dg6p[i]*dt;
 

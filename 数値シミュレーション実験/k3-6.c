@@ -1,5 +1,5 @@
 #include <stdio.h>
-#define N 36000 //[s]
+#define N 90000 //[s]
 
 double glu[N+1];
 double g6p[N+1];
@@ -19,7 +19,7 @@ double dhkgluatp[N+1];
 double dadp[N+1];
 double dg6p[N+1];
 
-double dt=600.0/N;   //[min]
+double dt=1500.0/N;   //[min]
 double k1=1.0;
 double k2=0.5;
 double k3=0.5;
@@ -27,10 +27,12 @@ double k4=1.0;
 double k5=0.1;
 double hktot=0.1;
 
-double fglu(double glu,double hkfree,double hkatp){
+double fglu(double glu,double hkfree,double hkatp,double gluhk,double hkgluatp){
     double q1=k1*glu*hkfree;
     double q11=k1*glu*hkatp;
-    return (-q1-q11);
+    double q2=k2*gluhk;
+    double q21=k2*hkgluatp;
+    return (-q1-q11+q2+q21);
 }
 
 double fgluhk(double glu,double hkfree,double gluhk,double atp,double hkgluatp){
@@ -50,10 +52,12 @@ double fhkfree(double glu,double hkfree,double gluhk,double atp,double hkatp,dou
     return (-q1+q2-q3+q4+q5);
 }
 
-double fatp(double atp,double hkfree,double gluhk){
+double fatp(double atp,double hkfree,double gluhk,double hkatp,double hkgluatp){
     double q3=k3*atp*hkfree;
     double q31=k3*atp*gluhk;
-    return (-q3-q31);
+    double q4=k4*hkatp;
+    double q41=k4*hkgluatp;
+    return (-q3-q31+q4+q41);
 }
 
 double fhkatp(double atp,double hkfree,double hkatp,double glu,double hkgluatp){
@@ -97,10 +101,10 @@ int main(void){
     for(int i=0;i<N;i++){
         hkfree[i]=hktot-gluhk[i]-hkatp[i]-hkgluatp[i]; //hkfreeの濃度計算
 
-        dglu[i]=fglu(glu[i],hkfree[i],hkatp[i]);
+        dglu[i]=fglu(glu[i],hkfree[i],hkatp[i],gluhk[i],hkgluatp[i]);
         dgluhk[i]=fgluhk(glu[i],hkfree[i],gluhk[i],atp[i],hkgluatp[i]);
         dhkfree[i]=fhkfree(glu[i],hkfree[i],gluhk[i],atp[i],hkatp[i],hkgluatp[i]);
-        datp[i]=fatp(atp[i],hkfree[i],gluhk[i]);
+        datp[i]=fatp(atp[i],hkfree[i],gluhk[i],hkatp[i],hkgluatp[i]);
         dhkatp[i]=fhkatp(atp[i],hkfree[i],hkatp[i],glu[i],hkgluatp[i]);
         dhkgluatp[i]=fhkgluatp(atp[i],hkfree[i],hkatp[i],glu[i],hkgluatp[i],gluhk[i]);
         dg6p[i]=fg6p(hkgluatp[i]);

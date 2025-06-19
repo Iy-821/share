@@ -16,12 +16,12 @@ void list_init(){
     celldata[0].next=-1;
 }
 
-void printall(){
-    int now=first;
-    while(now!=-1){
+void printall(int now){
+    if(now!=-1){
         printf("%c ",celldata[now].data);
-        now=celldata[now].next;
+        printall(celldata[now].next);
     }
+
 }
 
 void ins(int n,char x){
@@ -41,7 +41,7 @@ int main(void){
     while(1){
         scanf("%s",c);
         if(c[0]=='Z'){
-            printall();
+            printall(first);
         }else{
             ins(0,c[0]);
             first++;

@@ -34,9 +34,8 @@ int main(void){
     s[0]=4.0;
     es[0]=0.0;
     p[0]=0.0;
-    
-    double k1=10.8147;
-    double k2=-10.3587;
+    double k1=124.0;
+    double k2=797.0;
     double k3=87.5;
     double etot=0.0000016;
 
